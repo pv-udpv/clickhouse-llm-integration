@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: clickhouse-llm
+    ports:
+      - "8123:8123"  # HTTP
+      - "9000:9000"  # Native
+    volumes:
+      - ./docker/clickhouse/config.xml:/etc/clickhouse-server/config.d/config.xml
+      - ./docker/clickhouse/users.xml:/etc/clickhouse-server/users.d/users.xml
+      - ./src/udfs:/var/lib/clickhouse/user_scripts
+      - clickhouse-data:/var/lib/clickhouse
+    environment:
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-}
+    networks:
+      - llm-network
+
+  mindsdb:
+    image: mindsdb/mindsdb:latest
+    container_name: mindsdb-llm
+    ports:
+      - "47334:47334"  # HTTP
+      - "47335:47335"  # MySQL
+    volumes:
+      - mindsdb-data:/root/mindsdb_storage
+      - ./src/mindsdb:/root/mindsdb_custom
+    environment:
+      MINDSDB_STORAGE_DIR: /root/mindsdb_storage
+    depends_on:
+      - clickhouse
+    networks:
+      - llm-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - llm-network
+
+volumes:
+  clickhouse-data:
+  mindsdb-data:
+  redis-data:
+
+networks:
+  llm-network:
+    driver: bridge

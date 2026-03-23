@@ -1,0 +1,53 @@
+<functions>
+    <!-- HuggingFace Embeddings -->
+    <function>
+        <type>executable</type>
+        <name>hf_embed</name>
+        <return_type>Array(Float32)</return_type>
+        <argument>
+            <type>String</type>
+            <name>text</name>
+        </argument>
+        <format>TabSeparated</format>
+        <command>python3 /var/lib/clickhouse/user_scripts/embeddings/hf_embed.py</command>
+    </function>
+
+    <!-- Perplexity pplx-embed -->
+    <function>
+        <type>executable</type>
+        <name>pplx_embed</name>
+        <return_type>Array(Float32)</return_type>
+        <argument>
+            <type>String</type>
+            <name>text</name>
+        </argument>
+        <format>TabSeparated</format>
+        <command>python3 /var/lib/clickhouse/user_scripts/embeddings/pplx_embed.py</command>
+    </function>
+
+    <!-- Local Sentence Transformers -->
+    <function>
+        <type>executable</type>
+        <name>sentence_embed</name>
+        <return_type>Array(Float32)</return_type>
+        <argument>
+            <type>String</type>
+            <name>text</name>
+        </argument>
+        <format>TabSeparated</format>
+        <command>python3 /var/lib/clickhouse/user_scripts/embeddings/sentence_embed.py</command>
+    </function>
+
+    <!-- OpenAI Chat -->
+    <function>
+        <type>executable</type>
+        <name>openai_chat</name>
+        <return_type>String</return_type>
+        <argument>
+            <type>String</type>
+            <name>prompt</name>
+        </argument>
+        <format>TabSeparated</format>
+        <command>python3 /var/lib/clickhouse/user_scripts/llm/openai_chat.py</command>
+    </function>
+</functions>

@@ -1,0 +1,70 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment variables
+.env
+*.env
+!.env.example
+
+# ClickHouse
+clickhouse-data/
+*.log
+
+# MindsDB
+mindsdb_storage/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# Docker
+docker/volumes/
+
+# API Keys & Secrets
+secrets/
+*.key
+*.pem
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Cache
+*.cache
+.cache/
