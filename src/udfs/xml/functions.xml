@@ -50,4 +50,30 @@
         <format>TabSeparated</format>
         <command>python3 /var/lib/clickhouse/user_scripts/llm/openai_chat.py</command>
     </function>
+
+    <!-- Anthropic Claude -->
+    <function>
+        <type>executable</type>
+        <name>claude_chat</name>
+        <return_type>String</return_type>
+        <argument>
+            <type>String</type>
+            <name>prompt</name>
+        </argument>
+        <format>TabSeparated</format>
+        <command>python3 /var/lib/clickhouse/user_scripts/llm/claude_chat.py</command>
+    </function>
+
+    <!-- Perplexity Sonar -->
+    <function>
+        <type>executable</type>
+        <name>perplexity_chat</name>
+        <return_type>String</return_type>
+        <argument>
+            <type>String</type>
+            <name>prompt</name>
+        </argument>
+        <format>TabSeparated</format>
+        <command>python3 /var/lib/clickhouse/user_scripts/llm/perplexity_chat.py</command>
+    </function>
 </functions>

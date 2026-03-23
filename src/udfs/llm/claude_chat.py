@@ -1,40 +1,40 @@
 #!/usr/bin/env python3
 """
-OpenAI Chat Completions UDF for ClickHouse with retry logic
+Anthropic Claude UDF for ClickHouse
+Generates responses using Anthropic's Claude API
 """
 
 import sys
 import os
 import time
 from typing import Optional
-from openai import OpenAI, APIError, APITimeoutError, RateLimitError
+from anthropic import Anthropic, APIError, APITimeoutError, RateLimitError
 
-# Initialize OpenAI client
-api_key = os.getenv('OPENAI_API_KEY', '')
-client = OpenAI(
+# Initialize Anthropic client
+api_key = os.getenv('ANTHROPIC_API_KEY', '')
+client = Anthropic(
     api_key=api_key,
     timeout=int(os.getenv('REQUEST_TIMEOUT', '30'))
 )
 
-MODEL = os.getenv('OPENAI_MODEL', 'gpt-4')
+MODEL = os.getenv('CLAUDE_MODEL', 'claude-3-5-sonnet-20241022')
 MAX_TOKENS = int(os.getenv('MAX_TOKENS', '1000'))
 MAX_RETRIES = int(os.getenv('MAX_RETRIES', '3'))
 RETRY_BACKOFF = float(os.getenv('RETRY_BACKOFF', '1.0'))
-TEMPERATURE = float(os.getenv('TEMPERATURE', '0.7'))
 
 # In-memory cache
 _cache = {}
 
-def chat(prompt: str, use_cache: bool = True) -> str:
+def get_response(prompt: str, use_cache: bool = True) -> str:
     """
-    Get completion from OpenAI with retry logic
+    Generate response using Claude with retry logic
     
     Args:
         prompt: Input prompt
         use_cache: Whether to use in-memory cache
         
     Returns:
-        OpenAI response
+        Claude's response
     """
     # Check cache
     if use_cache and prompt in _cache:
@@ -44,20 +44,19 @@ def chat(prompt: str, use_cache: bool = True) -> str:
     
     for attempt in range(MAX_RETRIES):
         try:
-            response = client.chat.completions.create(
+            message = client.messages.create(
                 model=MODEL,
-                messages=[{"role": "user", "content": prompt}],
                 max_tokens=MAX_TOKENS,
-                temperature=TEMPERATURE
+                messages=[{"role": "user", "content": prompt}]
             )
             
-            result = response.choices[0].message.content
+            response = message.content[0].text
             
             # Cache successful result
             if use_cache:
-                _cache[prompt] = result
+                _cache[prompt] = response
             
-            return result
+            return response
             
         except RateLimitError as e:
             last_error = f"Rate limit: {e}"
@@ -93,7 +92,7 @@ def main():
         if not prompt:
             continue
         
-        result = chat(prompt)
+        result = get_response(prompt)
         print(result)
         sys.stdout.flush()
 

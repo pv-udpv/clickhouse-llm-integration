@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-OpenAI Chat Completions UDF for ClickHouse with retry logic
+Perplexity Sonar Chat UDF for ClickHouse
+Uses Perplexity's Sonar models for real-time web search
 """
 
 import sys
@@ -9,32 +10,32 @@ import time
 from typing import Optional
 from openai import OpenAI, APIError, APITimeoutError, RateLimitError
 
-# Initialize OpenAI client
-api_key = os.getenv('OPENAI_API_KEY', '')
+# Initialize Perplexity client (OpenAI-compatible)
+api_key = os.getenv('PERPLEXITY_API_KEY', '')
 client = OpenAI(
     api_key=api_key,
+    base_url="https://api.perplexity.ai",
     timeout=int(os.getenv('REQUEST_TIMEOUT', '30'))
 )
 
-MODEL = os.getenv('OPENAI_MODEL', 'gpt-4')
+MODEL = os.getenv('PERPLEXITY_MODEL', 'llama-3.1-sonar-large-128k-chat')
 MAX_TOKENS = int(os.getenv('MAX_TOKENS', '1000'))
 MAX_RETRIES = int(os.getenv('MAX_RETRIES', '3'))
 RETRY_BACKOFF = float(os.getenv('RETRY_BACKOFF', '1.0'))
-TEMPERATURE = float(os.getenv('TEMPERATURE', '0.7'))
 
 # In-memory cache
 _cache = {}
 
 def chat(prompt: str, use_cache: bool = True) -> str:
     """
-    Get completion from OpenAI with retry logic
+    Get response from Perplexity Sonar with retry logic
     
     Args:
         prompt: Input prompt
         use_cache: Whether to use in-memory cache
         
     Returns:
-        OpenAI response
+        Perplexity response
     """
     # Check cache
     if use_cache and prompt in _cache:
@@ -47,8 +48,7 @@ def chat(prompt: str, use_cache: bool = True) -> str:
             response = client.chat.completions.create(
                 model=MODEL,
                 messages=[{"role": "user", "content": prompt}],
-                max_tokens=MAX_TOKENS,
-                temperature=TEMPERATURE
+                max_tokens=MAX_TOKENS
             )
             
             result = response.choices[0].message.content

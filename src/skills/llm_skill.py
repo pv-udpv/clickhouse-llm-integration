@@ -33,12 +33,27 @@ class LLMSkill:
             self.model = self.model or 'llama-3.1-sonar-large-128k-chat'
     
     def generate(self, prompt: str, max_tokens: int = 1000, 
-                 temperature: float = 0.7) -> str:
+                 temperature: float = 0.7, use_cache: bool = True) -> str:
         """Generate text from prompt"""
+        # Check cache first
+        if use_cache:
+            from src.skills.cache_skill import CacheSkill
+            cache = CacheSkill(cache_type='memory')
+            cached = cache.get_llm_response(prompt, self.model)
+            if cached:
+                return cached
+        
+        # Generate response
         if self.provider == 'anthropic':
-            return self._anthropic_generate(prompt, max_tokens, temperature)
+            result = self._anthropic_generate(prompt, max_tokens, temperature)
         else:
-            return self._openai_generate(prompt, max_tokens, temperature)
+            result = self._openai_generate(prompt, max_tokens, temperature)
+        
+        # Cache result
+        if use_cache and result:
+            cache.set_llm_response(prompt, self.model, result)
+        
+        return result
     
     def _openai_generate(self, prompt: str, max_tokens: int, 
                         temperature: float) -> str:
