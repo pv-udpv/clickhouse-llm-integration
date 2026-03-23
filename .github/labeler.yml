@@ -1,0 +1,52 @@
+# Labeler configuration for auto-labeling PRs based on file changes
+
+'component: udf':
+  - src/udfs/**/*
+  - src/udfs/xml/**/*
+
+'component: skill':
+  - src/skills/**/*
+
+'component: agent':
+  - src/agents/**/*
+
+'component: tool':
+  - src/tools/**/*
+
+'component: docs':
+  - docs/**/*
+  - README.md
+  - '**/*.md'
+
+'component: infra':
+  - docker/**/*
+  - docker-compose.yml
+  - scripts/**/*
+  - .github/**/*
+
+'component: test':
+  - tests/**/*
+  - '**/*test*.py'
+
+'phase-1: foundation':
+  - config/**/*
+  - requirements.txt
+  - pyproject.toml
+
+'phase-2: embeddings':
+  - src/udfs/embeddings/**/*
+  - src/skills/embedding_skill.py
+
+'phase-3: llm':
+  - src/udfs/llm/**/*
+  - src/skills/llm_skill.py
+
+'phase-4: mindsdb':
+  - src/mindsdb/**/*
+
+'phase-5: agents':
+  - src/agents/**/*
+
+'sql':
+  - sql/**/*
+  - '**/*.sql'

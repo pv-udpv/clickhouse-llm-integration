@@ -1,0 +1,17 @@
+name: Project Board Automation
+
+on:
+  issues:
+    types: [opened, reopened, closed, labeled]
+  pull_request:
+    types: [opened, reopened, closed, merged, ready_for_review]
+
+jobs:
+  update-project:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add to project
+        uses: actions/add-to-project@v0.5.0
+        with:
+          project-url: https://github.com/users/pv-udpv/projects/1
+          github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
