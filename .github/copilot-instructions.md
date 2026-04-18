@@ -13,7 +13,7 @@
 
 ## Language rules
 
-- Python 3.11+ required. Target `ruff` clean + `mypy --strict` where configured.
+- Python 3.9+ required. Follow the repo's configured linting and type-checking tools; use `mypy --strict` where configured.
 - Use `pytest` for tests; prefer fixtures over mocks where possible.
 - Keep module-level side effects to zero. No `import os; os.environ[...]=...` at import time.
 
