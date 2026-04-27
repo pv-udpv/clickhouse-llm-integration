@@ -14,7 +14,7 @@ sentence-transformers>=2.3.0
 mindsdb-sdk>=0.3.0
 
 # Utilities
-python-dotenv>=1.0.0
+python-dotenv>=1.2.2
 pyyaml>=6.0
 pydantic>=2.5.0
 
